@@ -1,6 +1,4 @@
-use std::future::Future;
-
-use crate::error::CopcError;
+use crate::{ConditionalSend, ConditionalSendFuture, error::CopcError, utils::ConditionalSync};
 
 /// Async random-access byte source.
 ///
@@ -8,16 +6,16 @@ use crate::error::CopcError;
 /// in-memory buffers, or any other random-access mechanism.
 ///
 /// All methods return non-Send futures for WASM compatibility.
-pub trait ByteSource {
+pub trait ByteSource: ConditionalSync + ConditionalSend {
     /// Read `length` bytes starting at `offset`.
     fn read_range(
         &self,
         offset: u64,
         length: u64,
-    ) -> impl Future<Output = Result<Vec<u8>, CopcError>>;
+    ) -> impl ConditionalSendFuture<Output = Result<Vec<u8>, CopcError>>;
 
     /// Total size of the source in bytes, if known.
-    fn size(&self) -> impl Future<Output = Result<Option<u64>, CopcError>>;
+    fn size(&self) -> impl ConditionalSendFuture<Output = Result<Option<u64>, CopcError>>;
 
     /// Read multiple ranges in one logical operation.
     ///
@@ -26,7 +24,7 @@ pub trait ByteSource {
     fn read_ranges(
         &self,
         ranges: &[(u64, u64)],
-    ) -> impl Future<Output = Result<Vec<Vec<u8>>, CopcError>> {
+    ) -> impl ConditionalSendFuture<Output = Result<Vec<Vec<u8>>, CopcError>> {
         async move {
             let mut results = Vec::with_capacity(ranges.len());
             for &(offset, length) in ranges {

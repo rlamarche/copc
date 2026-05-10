@@ -122,6 +122,7 @@ mod header;
 mod hierarchy;
 mod reader;
 mod types;
+mod utils;
 
 pub use byte_source::ByteSource;
 pub use chunk::Chunk;
@@ -132,6 +133,7 @@ pub use header::{CopcHeader, CopcInfo};
 pub use hierarchy::{HierarchyCache, HierarchyEntry};
 pub use reader::CopcStreamingReader;
 pub use types::{Aabb, VoxelKey};
+pub use utils::{BoxFuture, ConditionalSend, ConditionalSendFuture};
 
 // Re-exports of the handful of `las` types that appear in this crate's
 // public API. Users who only consume the types we return don't need to

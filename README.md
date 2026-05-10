@@ -21,7 +21,7 @@ Async streaming COPC reader. Loads octree hierarchy and point data incrementally
 - Incremental hierarchy page loading
 - Individual chunk fetch + decompression
 - `ByteSource` trait with `FileSource` (local) and `Vec<u8>` (in-memory) implementations
-- No `Send` requirement on futures — WASM compatible
+- `Send` requirement on futures is conditionnal depending target arch — WASM compatible
 
 ### [`copc-temporal`](./copc-temporal)
 
